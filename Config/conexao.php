@@ -12,5 +12,8 @@ try{
         PDO::ERRMODE_EXCEPTION);
     echo"conectado com sucesso";
 }
-$pdo->exec("USE Gerenciar funcionario")
+catch (PDOException $erro) {
+    echo "erro ao conectar:".$erro->getMessage();
+
+}
 ?>

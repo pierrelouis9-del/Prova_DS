@@ -8,9 +8,7 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
     $salario = $_POST["salario"];
 
 
-    if(){
-
-    }
+    
 }
 
 ?>
