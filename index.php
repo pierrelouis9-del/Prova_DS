@@ -85,9 +85,16 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
             <?php if(count($funcionarios)===0){ ?>
             <P>nehum funcionario cadastrado</P>
             <?php }else{ ?>
-
+            <?php foreach($funcionarios as $funcionario) {?>
+            <h3><?= $funcionario["nome"] ?></h3>
+            <p><strong>Email:</strong><?= $funcionario["email"] ?></p>
+            <p><strong>Salario:</strong><?= $funcionario["salario"] ?></p>
+            <a href="?excluir=<?= $funcionario["id"] ?>"
+             onclick="return confirm('Deseja exccluir esse funcionario?')"> excluir funcionario</a>
             <?php } ?>
-        </div>
+             <?php } ?>
+
+            </div>
     </main>
 
 </body>
