@@ -31,11 +31,3 @@ catch (PDOException $erro) {
 }
 
 ?>
-
-
-
-    
-
-
-
-?>

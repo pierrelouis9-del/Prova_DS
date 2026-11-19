@@ -35,7 +35,18 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
         $mensagem="preenche todos os campos!";
     }
 
-  
+  if(!isset($_GET["excluir"])){
+    $id = filter_var ($_GET["excluir"],
+    FILTER_VALIDATE_INT);
+    if($id !== false && $id !== null && $id>0){
+        $stmt = $pdo->prepare ("delete from funcionarios where id = :id");
+        $stmt->execute([":id"=> $id]);
+        $mensagem = "funcionario deletado com sucesso!" ;
+    }
+  }
+
+  $stmt = $pdo->query("SELECT * FROM funcionarios ORDER BY id DESC");
+  $funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 ?>
@@ -69,6 +80,14 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
                 <button type="submit">Cadastrar</button>
             </form>
         </div>  
+        <div>
+            <h2> Funcionarios Cadastrados</h2>
+            <?php if(count($funcionarios)===0){ ?>
+            <P>nehum funcionario cadastrado</P>
+            <?php }else{ ?>
+
+            <?php } ?>
+        </div>
     </main>
 
 </body>
