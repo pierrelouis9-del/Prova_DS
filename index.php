@@ -12,9 +12,9 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
     $funcionario = null;
 
     if($tipo === "funcionario comum"){
-        $funcionario = new funcionarioComum();
+        $funcionario = new funcionarioComum($nome, $email, $salario);
     } elseif($tipo === "gerente"){
-        $funcionario = new Gerente();
+        $funcionario = new Gerente($nome, $email, $salario);
     }
 
     if ($nome !== "" && $email !== "" && $salario > 0 && $funcionario !== null) {
