@@ -14,26 +14,25 @@ abstract class Funcionario{
 }
 
 class funcionarioComum extends Funcionario{
-    function __construct(){
+    function __construct($nome, $email,$salario){
         $this->nome = $nome;
         $this->email = $email;
         $this->salario = $salario;
     }
-    function CalcularBonus ($salario){
-        $novasalario = $salario *5 / 100;
-        return"calculando o bonus";
+    function CalcularBonus (){
+        return $this->salario *5/100;
     }
 }
 
 class Gerente extends Funcionario{
-    function __construct(){
+    function __construct($nome, $email,$salario){
         $this->nome = $nome;
         $this->email = $email;
         $this->salario = $salario;
-        $novasalario = $salario *5 / 100;
     }
     function CalcularBonus (){
-        return"calculando o bonus";
+        return $this->salario *15/100;
     }
-}
+}    
+
 ?>

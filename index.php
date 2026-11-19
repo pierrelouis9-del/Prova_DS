@@ -16,21 +16,33 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
     } elseif($tipo === "gerente"){
         $funcionario = new Gerente();
     }
-    if($funcionario !== null && $nome !==""){
-        $funcionario->nome =$nome;
-        $sql="insert into funcionarios(nome, email,salario) values(:nome,:email,:salario)";
 
-        $stmt->execute ([
-            ":nome" =>$funcionario->nome,
-            ":email" =>$funcionario->email,
-            ":salario" =>$funcionario->salario]);
-        $mensagem="funcionario registrado com successo!";
+    if ($nome !== "" && $email !== "" && $salario > 0 && $funcionario !== null) {
+
+        $sql = "INSERT INTO funcionarios (nome, email, salario, tipo) VALUES(:nome, :email, :salario, :tipo)";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ":nome" => $funcionario->nome,
+            ":email" => $funcionario->email,
+            ":salario" => $funcionario->salario,
+            ":tipo" => $tipo
+        ]);
+
+        $mensagem = "Funcionário registrado com sucesso!";
+
     }else{
         $mensagem="preenche todos os campos!";
     }
 
+    if(!isset($_GET["excluir"])){
+        $id = filter_var($_GET["excluir"],
+        FILTER_VALIDATE_INT) ;
+        
+    }
     
 }
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -44,4 +56,3 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
 </body>
 </html>
 
-?>
