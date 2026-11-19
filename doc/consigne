@@ -108,3 +108,189 @@ A apresentação visual será considerada, mas o funcionamento do sistema terá 
 ENTREGA .ZIP CONTENDO:
 - Pasta completa do projeto.
 - Arquivo .sql de criação do banco de dados.
+
+index.php 
+
+<?php
+
+require_once __DIR__ . "/app/Models/indexClasse.php";
+require_once __DIR__ . "/Config/conexao.php";
+
+$mensagem = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $nome = trim($_POST["nome"] ?? "");
+    $email = trim($_POST["email"] ?? "");
+    $salario = $_POST["salario"] ?? "";
+    $tipo = $_POST["tipo"] ?? "";
+
+    $funcionario = null;
+
+    if ($tipo === "funcionario comum") {
+
+        $funcionario = new funcionarioComum($nome, $email, $salario);
+
+    } elseif ($tipo === "gerente") {
+
+        $funcionario = new Gerente($nome, $email, $salario);
+
+    }
+
+    if ($nome !== "" && $email !== "" && is_numeric($salario) && $salario > 0 && $funcionario !== null) {
+
+        $sql = "INSERT INTO funcionarios (nome, email, salario, tipo) VALUES (:nome, :email, :salario, :tipo)";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->execute([
+            ":nome" => $funcionario->nome,
+            ":email" => $funcionario->email,
+            ":salario" => $funcionario->salario,
+            ":tipo" => $tipo
+        ]);
+
+        $mensagem = "Funcionário registrado com sucesso!";
+
+    } else {
+
+        $mensagem = "Preencha todos os campos corretamente!";
+
+    }
+
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Funcionários</title>
+</head>
+
+<body>
+
+    <h1>Cadastro de Funcionários</h1>
+
+    <form method="POST">
+
+        <label>Nome:</label>
+        <input type="text" name="nome" required>
+
+        <br><br>
+
+        <label>Email:</label>
+        <input type="email" name="email" required>
+
+        <br><br>
+
+        <label>Salário:</label>
+        <input type="number" name="salario" step="0.01" min="0.01" required>
+
+        <br><br>
+
+        <label>Tipo de funcionário:</label>
+
+        <select name="tipo" required>
+            <option value="">Selecione</option>
+            <option value="funcionario comum">Funcionário comum</option>
+            <option value="gerente">Gerente</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">Cadastrar</button>
+
+    </form>
+
+    <p><?= htmlspecialchars($mensagem, ENT_QUOTES, "UTF-8") ?></p>
+
+</body>
+
+</html>
+
+conexão 
+<?php
+
+$host = "localhost";
+$banco = "Gerenciar_Funcionario";
+$usuario = "juvensky315";
+$senha = "315!@#";
+
+try {
+
+    $pdo = new PDO(
+        "mysql:host=$host;charset=utf8mb4",
+        $usuario,
+        $senha
+    );
+
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS $banco");
+
+    $pdo->exec("USE $banco");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS funcionarios (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nome VARCHAR(100) NOT NULL,
+            email VARCHAR(200) NOT NULL,
+            salario DECIMAL(10,2) NOT NULL,
+            tipo VARCHAR(50) NOT NULL
+        )
+    ");
+
+} catch (PDOException $erro) {
+
+    die("Erro na conexão: " . $erro->getMessage());
+
+}
+
+?>
+
+indexClasse
+
+
+<?php
+
+abstract class Funcionario {
+    public $nome;
+    public $email;
+    public $salario;
+
+    public function __construct($nome, $email, $salario) {
+        $this->nome = $nome;
+        $this->email = $email;
+        $this->salario = $salario;
+    }
+
+    abstract public function CalcularBonus();
+}
+
+class funcionarioComum extends Funcionario {
+
+    public function __construct($nome, $email, $salario) {
+        parent::__construct($nome, $email, $salario);
+    }
+
+    public function CalcularBonus() {
+        return $this->salario * 5 / 100;
+    }
+}
+
+class Gerente extends Funcionario {
+
+    public function __construct($nome, $email, $salario) {
+        parent::__construct($nome, $email, $salario);
+    }
+
+    public function CalcularBonus() {
+        return $this->salario * 10 / 100;
+    }
+}
+
+?>
