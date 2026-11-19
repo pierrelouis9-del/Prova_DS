@@ -35,13 +35,9 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
         $mensagem="preenche todos os campos!";
     }
 
-    if(!isset($_GET["excluir"])){
-        $id = filter_var($_GET["excluir"],
-        FILTER_VALIDATE_INT) ;
-        
-    }
-    
+  
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +48,29 @@ if($_SERVER["REQUEST_METHOD"]=== "POST"){
     <title>Document</title>
 </head>
 <body>
-    <h1>Bem-vindo</h1>
+    <header>
+        <h1>Sistema de Gerenciamento de funcionarios</h1>
+    </header>
+    <main>
+        <div>
+            <form method="POST">
+                <label for="nome">Nome:</label>
+                <input type="text" name="nome" id="nome" required>
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required>
+                <label for="salario">Salario:</label>
+                <input type="number" name="salario" id="salario" required>
+                <label for="tipo">Tipo:</label>
+                <select name="tipo" id="tipo">
+                    <option value="">Selecione</option>
+                    <option value="funcionario comum">Funcionario</option>
+                    <option value="gerente">Gerente</option>
+                </select>
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>  
+    </main>
+
 </body>
 </html>
 
